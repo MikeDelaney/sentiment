@@ -17,7 +17,7 @@ def buildvocab(numwords):
     training_dirs = [base_dir + '/' + dirname for dirname in ('pos', 'neg')]
     stopwords = open('stopwords.txt').read().lower().split()
 
-    # TODO: Populate vocab list with N most frequent words in training data,
+    # Populate vocab list with numwords most frequent words in training data,
     # minus stopwords
     for training_dir in training_dirs:
         for training_file in os.listdir(training_dir):
@@ -31,12 +31,16 @@ def buildvocab(numwords):
     return vocab
 
 
-def vectorize(fn):
-    global vocab
+def vectorize(file_name, vocab):
     vector = np.zeros(len(vocab))
-
-    ###TODO: Create vector representation of
-
+    with open(file_name) as fn:
+        review = []
+        review.extend(fn.read().lower().split())
+    for word in review:
+        try:
+            vector[vocab.index(word)] += 1
+        except ValueError:
+            pass
     return vector
 
 def make_classifier():
