@@ -79,6 +79,7 @@ def test_classifier(lr):
 
 
 if __name__=='__main__':
-    vocab = buildvocab()
+    numwords = int(raw_input("\nEnter number of words for classifiers: "))
+    vocab = buildvocab(numwords)
     lr = make_classifier()
     test_classifier(lr)
