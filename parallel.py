@@ -23,12 +23,11 @@ def get_results():
     lview = clients.load_balanced_view()
     # set blocking to True to get all results once processing is done
     lview.block = True
-    results = lview.map(results_helper, alphas)
-    # results = dview.apply(results_helper, alphas)
+    results = lview.map(get_single_result, alphas)
     return results
 
 
-def results_helper(alpha):
+def get_single_result(alpha):
     clf = MultinomialNB(alpha)
     result = (alpha, numpy.mean(cross_val_score(clf, data.data, data.target)))
     return result
