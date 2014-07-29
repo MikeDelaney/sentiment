@@ -2,22 +2,40 @@ import sys, os
 import numpy as np
 from operator import itemgetter as ig
 from sklearn.linear_model import LogisticRegression as LR
+from collections import Counter
+import string
 
-vocab = [] #the features used in the classifier
+# vocab = []  # the features used in the classifier
 
-#build vocabulary
-def buildvocab():
-    global vocab
+# build vocabulary
+
+
+def buildvocab(numwords):
+    vocab = []
+    temp_words = []
+    base_dir = os.getcwd()
+    training_dirs = [base_dir + '/' + dirname for dirname in ('pos', 'neg')]
     stopwords = open('stopwords.txt').read().lower().split()
 
-    ###TODO: Populate vocab list with N most frequent words in training data, minus stopwords
+    # TODO: Populate vocab list with N most frequent words in training data,
+    # minus stopwords
+    for training_dir in training_dirs:
+        for training_file in os.listdir(training_dir):
+            with open(training_dir + '/' + training_file) as f:
+                words = f.read().lower().split()
+            for word in words:
+                if word not in stopwords and word not in string.punctuation:
+                    temp_words.append(word)
+    # Counter returns list of ('word', count)
+    vocab = [item[0] for item in Counter(temp_words).most_common(numwords)]
+    return vocab
 
 
 def vectorize(fn):
     global vocab
     vector = np.zeros(len(vocab))
-    
-    ###TODO: Create vector representation of 
+
+    ###TODO: Create vector representation of
 
     return vector
 
@@ -57,6 +75,6 @@ def test_classifier(lr):
 
 
 if __name__=='__main__':
-    buildvocab()
+    vocab = buildvocab()
     lr = make_classifier()
     test_classifier(lr)
