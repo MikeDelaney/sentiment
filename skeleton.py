@@ -43,14 +43,25 @@ def vectorize(file_name, vocab):
             pass
     return vector
 
-def make_classifier():
-   
-    #TODO: Build X matrix of vector representations of review files, and y vector of labels
 
+def make_classifier(vocab):
+    base_dir = os.getcwd()
+    directories = [base_dir + '/' + dirname for dirname in ('pos', 'neg')]
+    reviews = []
+    y = []
+    for directory in directories:
+        for review_file in os.listdir(directory):
+            reviews.append(vectorize(directory + '/' + review_file, vocab))
+            if os.path.basename(directory) == 'pos':
+                y.append(1)
+            else:
+                y.append(-1)
+    reviews = np.asarray(reviews)
+    y = np.asarray(y)
     lr = LR()
-    lr.fit(X,y)
-
+    lr.fit(reviews, y)
     return lr
+
 
 def test_classifier(lr):
     global vocab
@@ -81,5 +92,5 @@ def test_classifier(lr):
 if __name__=='__main__':
     numwords = int(raw_input("\nEnter number of words for classifiers: "))
     vocab = buildvocab(numwords)
-    lr = make_classifier()
+    lr = make_classifier(vocab)
     test_classifier(lr)
