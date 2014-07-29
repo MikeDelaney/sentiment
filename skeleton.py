@@ -63,34 +63,33 @@ def make_classifier(vocab):
     return lr
 
 
-def test_classifier(lr):
-    global vocab
-    test = np.zeros((len(os.listdir('test')),len(vocab)))
+def test_classifier(lr, vocab):
+    test = np.zeros((len(os.listdir('test')), len(vocab)))
     testfn = []
     i = 0
     y = []
     for fn in os.listdir('test'):
         testfn.append(fn)
-        test[i] = vectorize(os.path.join('test',fn))
+        test[i] = vectorize(os.path.join('test', fn), vocab)
         ind = int(fn.split('_')[0][-1])
         y.append(1 if ind == 3 else -1)
         i += 1
 
-    assert(sum(y)==0)
+    assert(sum(y) == 0)
     p = lr.predict(test)
 
-    r,w = 0,0
-    for i,x in enumerate(p):
+    r, w = 0, 0
+    for i, x in enumerate(p):
         if x == y[i]:
             r += 1
         else:
-            w +=1
+            w += 1
             print(testfn[i])
-    print(r,w)
+    print(r, w)
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     numwords = int(raw_input("\nEnter number of words for classifiers: "))
     vocab = buildvocab(numwords)
     lr = make_classifier(vocab)
-    test_classifier(lr)
+    test_classifier(lr, vocab)
